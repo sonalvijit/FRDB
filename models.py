@@ -1,26 +1,21 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, UserMixin):
      id = db.Column(db.Integer, primary_key=True)
-     username = db.Column(db.String(50), nullable=False)
-     email = db.Column(db.String(256), nullable=False)
+     username = db.Column(db.String(50), unique=True, nullable=False)
+     email = db.Column(db.String(256),  unique=True, nullable=False)
      password = db.Column(db.String(288), nullable=False)
-     date_created = db.Column(db.Integer, default=datetime.utcnow().fromtimestamp())
+     date_created = db.Column(db.Integer, default=db.func.strftime('%s', 'now'))
 
-     tweets = db.relationship('tweet', lazy=True, cascade="all, delete")
-     comments = db.relationship('comment', lazy=True, cascade="all, delete")
-     like_comments = db.relationship('likecomment', lazy=True, cascade="all, delete")
-     like_tweets = db.relationship('liketweet', lazy=True, cascade="all, delete")
-     @classmethod
-     def set_password(self, pwd):
-          self.password = generate_password_hash(pwd)
+     tweets = db.relationship('Tweet', backref="author", lazy=True, cascade="all, delete")
+     comments = db.relationship('Comment', lazy=True, cascade="all, delete")
+     like_comments = db.relationship('LikeComment', lazy=True, cascade="all, delete")
+     like_tweets = db.relationship('LikeTweet', lazy=True, cascade="all, delete")
 
-     @classmethod
      def check_hash(self, pwd):
           return check_password_hash(self.password, pwd)
 
@@ -30,10 +25,10 @@ class Tweet(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      tweet = db.Column(db.Text, nullable=False)
      user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-     date_created = db.Column(db.Integer, default=datetime.utcnow().fromtimestamp())
+     date_created = db.Column(db.Integer, default=db.func.strftime('%s', 'now'))
 
-     comments = db.relationship("comment", lazy=True, cascade="all, delete")
-     liked_tweet = db.relationship('liketweet', lazy=True, cascade="all, delete")
+     comments = db.relationship("Comment", lazy=True, cascade="all, delete")
+     liked_tweet = db.relationship('LikeTweet', lazy=True, cascade="all, delete")
 
 class Comment(db.Model):
      __tablename__= "comment"
@@ -42,9 +37,9 @@ class Comment(db.Model):
      comment = db.Column(db.Text, nullable=False)
      user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
      tweet_id = db.Column(db.Integer, db.ForeignKey('tweet.id'))
-     date_created = db.Column(db.Integer, default=datetime.utcnow().fromtimestamp())
+     date_created = db.Column(db.Integer, default=db.func.strftime('%s', 'now'))
 
-     comments_likes = db.relationship("likecomment", lazy=True, cascade="all, delete")
+     comments_likes = db.relationship("LikeComment", lazy=True, cascade="all, delete")
 
 class LikeComment(db.Model):
      __tablename__ = "likecomment"
@@ -58,4 +53,18 @@ class LikeTweet(db.Model):
 
      id = db.Column(db.Integer, primary_key=True)
      user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-     tweet_id = db.Column(db.Integer, db.ForeignKey('tweet'))
+     tweet_id = db.Column(db.Integer, db.ForeignKey('tweet.id'))
+
+class Followers(db.Model):
+     __tablename__ = "followers"
+
+     id = db.Column(db.Integer, primary_key=True)
+     follower_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+     followed_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+     created_at = db.Column(db.Integer, default=db.func.strftime('%s', 'now'))
+
+     follower = db.relationship('User', foreign_keys=[follower_id], backref=db.backref('following', lazy='dynamic'))
+     followed = db.relationship('User', foreign_keys=[followed_id], backref=db.backref('followers', lazy='dynamic'))
+
+     def __repr__(self):
+          return f"<Follower {self.follower_id} follows {self.followed_id}>"
