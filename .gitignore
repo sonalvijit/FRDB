@@ -1,1 +1,3 @@
 *.db
+*.pyc
+instance/frdb.db
