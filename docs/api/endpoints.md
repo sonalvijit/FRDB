@@ -87,3 +87,28 @@ All API endpoints require an **Authorization** header with a valid Bearer token.
                "error":"Unable to find username"
           }
           ```
+
+### 4. **GET /create_tweet**
+- **Description**: Get User info via username
+- **Method**: `GET`
+- **Authentication**: Required (Session token will be allocated)
+- **Parameters**:
+     - `tweet`
+          ```json
+          {
+               "tweet":"<tweet_content>"
+          }
+          ```
+- **Response**:
+     - `201 OK`
+          ```json
+          {
+               "message":"tweet posted successfully!"
+          }
+          ```
+     - `400 Error`
+          ```json
+          {
+               "error":"Unable to tweet!"
+          }
+          ```
