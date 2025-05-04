@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from models import User, db, Tweet, LikeTweet, Comment, LikeComment, Followers
-from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings
+from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index
 
 routes_bp = Blueprint("routes_bp", __name__)
 login_manager = LoginManager()
@@ -13,6 +13,10 @@ def unauthorized():
 @login_manager.user_loader
 def user_loader(user_id):
      return User.query.get(int(user_id))
+
+@routes_bp.route("/")
+def index_page():
+     return handle_index()
 
 @routes_bp.route("/register", methods=["POST"])
 def register():

@@ -2,6 +2,9 @@ from flask import jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user
 
+def handle_index():
+     return jsonify(msg="Welcome to API"), 200
+
 def handle_register(User, db, data):
      username = data.get("username")
      email = data.get("email")
