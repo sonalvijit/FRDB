@@ -12,4 +12,20 @@ All API endpoints require an **Authorization** header with a valid Bearer token.
 
 ## Endpoints
 
-### 1. **GET /users**
+### 1. **GET /register**
+- **Description**: Register user
+- **Method**: `POST`
+- **Authentication**: Not required
+- **Parameters**:
+     - `username`
+     - `email`
+     - `password`
+- **Response**:
+     - `201 OK`
+          ```json
+          {"message":"User registered successfully"}
+          ```
+     - `400 Error`
+          ```json
+          {"error":"Username or email already exists"}
+          ```
