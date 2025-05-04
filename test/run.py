@@ -2,8 +2,8 @@ from faker import Faker
 from dotenv import load_dotenv
 from os import getenv
 from requests import get, post
-from pasg import get_pwd
-from usrd import initialize_db, add_user_info
+from password_generator import get_pwd
+from user_info_db import initialize_db, add_user_info
 
 load_dotenv()
 ptr_ = getenv("PORT")
