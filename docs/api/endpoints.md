@@ -20,12 +20,70 @@ All API endpoints require an **Authorization** header with a valid Bearer token.
      - `username`
      - `email`
      - `password`
+          ```json
+          {
+               "username":"<username>",
+               "email":"<email>",
+               "password":"<password>"
+          }
+          ```
 - **Response**:
      - `201 OK`
           ```json
-          {"message":"User registered successfully"}
+          {
+               "message":"User registered successfully"
+          }
           ```
      - `400 Error`
           ```json
-          {"error":"Username or email already exists"}
+          {
+               "error":"Username or email already exists"
+          }
+          ```
+
+### 2. **GET /login**
+- **Description**: Login into application
+- **Method**: `POST`
+- **Authentication**: Not required (Will be authenticated later)
+- **Parameters**:
+     - `username`
+     - `password`
+          ```json
+          {
+               "username":"<username>",
+               "password":"<password>"
+          }
+          ```
+- **Response**:
+     - `200 OK`
+          ```json
+          {
+               "message":"User logged in successfully!"
+          }
+          ```
+     - `400 Error`
+          ```json
+          {
+               "error":"Something went wrong!"
+          }
+          ```
+
+### 3. **GET /profile/(username)**
+- **Description**: Get User info via username
+- **Method**: `GET`
+- **Authentication**: Not required
+- **Parameters**: Not required
+- **Response**:
+     - `200 OK`
+          ```json
+          {
+               "username":"<user.username>",
+               "email":"<user.email>"
+          }
+          ```
+     - `400 Error`
+          ```json
+          {
+               "error":"Unable to find username"
+          }
           ```
