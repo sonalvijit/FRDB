@@ -105,4 +105,3 @@ Contributions are welcome! Please follow these steps:
 - [Flask](https://flask.palletsprojects.com/)
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [Faker](https://faker.readthedocs.io/)
-```
