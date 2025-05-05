@@ -5,7 +5,7 @@ from requests import get, Session, post
 from password_generator import get_pwd
 from user_info_db import initialize_db, add_user_info, get_user_random
 from json import dump, load
-from os import path
+from os import path, remove
 
 load_dotenv()
 ptr_ = getenv("PORT")
@@ -59,6 +59,7 @@ def create_tweet():
                     print("Tweet Created:", response.json())
                else:
                     print("Not Logged in or session expired:", response.status_code, response.text)
+          remove("./cookie.json")
      else:
           with open("./cookie.json", "r") as f:
                cookies = load(f)
@@ -73,9 +74,10 @@ def create_tweet():
                     print("Tweet Created:", response.json())
                else:
                     print("Not Logged in or session expired:", response.status_code, response.text)
-     # print(text_)
+          remove("./cookie.json")
 
-# login_user()
-create_tweet()
-# create_tweet()
-# [register_user() for _ in range(120)]
+def generator_user_():
+     [register_user() for _ in range(203)]
+
+generator_user_()
+[create_tweet() for _ in range(45)]
