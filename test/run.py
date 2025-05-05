@@ -15,7 +15,7 @@ initialize_db()
 
 get_data_ = Faker()
 
-def register_user():
+def register_user(i):
      username = get_data_.user_name()
      email = get_data_.email()
      pwd = get_pwd()
@@ -24,8 +24,8 @@ def register_user():
           "email":email,
           "password":pwd
      })
-     print(f"{username} was created")
      add_user_info(username=username, email=email, password=pwd)
+     print(f"{i}\t\t{username} was created")
      return [username, email, pwd]
 
 def login_user():
@@ -108,7 +108,7 @@ def like_tweet_():
           remove("./cookie.json")
 
 def generator_user_():
-     [register_user() for _ in range(203)]
+     [register_user(i) for i in range(203)]
 
 generator_user_()
 [create_tweet() for _ in range(45)]

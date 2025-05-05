@@ -41,7 +41,6 @@ def add_user_info(username, email, password):
      new_user = User(username=username, email=email, password=password)
      session.add(new_user)
      session.commit()
-     print(f"User: {username} added!")
      session.close()
 
 def get_user_random():
