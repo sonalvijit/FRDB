@@ -55,7 +55,7 @@ def create_tweet():
                response = session.post(create_twt, json={
                     "tweet":text_
                })
-               if response.status_code == 200:
+               if response.status_code == 201:
                     print("Tweet Created:", response.json())
                else:
                     print("Not Logged in or session expired:", response.status_code, response.text)
@@ -87,7 +87,7 @@ def like_tweet_():
                response = session.post(create_twt, json={
                     "tweet_id":1
                })
-               if response.status_code == 200:
+               if response.status_code == 201:
                     print("Tweet Created:", response.json())
                else:
                     print("Not Logged in or session expired:", response.status_code, response.text)
@@ -110,6 +110,6 @@ def like_tweet_():
 def generator_user_():
      [register_user() for _ in range(203)]
 
-# generator_user_()
-# [create_tweet() for _ in range(45)]
+generator_user_()
+[create_tweet() for _ in range(45)]
 [like_tweet_() for _ in range(45)]

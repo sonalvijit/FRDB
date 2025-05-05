@@ -46,7 +46,8 @@ def create_tweet():
 @routes_bp.route("/like",methods=["POST"])
 @login_required
 def like_tweet():
-     tweet_id_ = request.args.get("tweet_id")
+     tweet_id_ = request.json.get("tweet_id")
+     # tweet_id_ = request.args.get("tweet_id")
      return handle_like_tweet(LikeTweet=LikeTweet, tweet_id=tweet_id_, current_user=current_user.id ,db=db)
 
 @routes_bp.route("/tweet",methods=["GET"])
