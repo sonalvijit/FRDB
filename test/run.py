@@ -1,9 +1,11 @@
 from faker import Faker
 from dotenv import load_dotenv
 from os import getenv
-from requests import get, post
+from requests import get, Session, post
 from password_generator import get_pwd
-from user_info_db import initialize_db, add_user_info
+from user_info_db import initialize_db, add_user_info, get_user_random
+from json import dump, load
+from os import path
 
 load_dotenv()
 ptr_ = getenv("PORT")
@@ -26,4 +28,54 @@ def register_user():
      add_user_info(username=username, email=email, password=pwd)
      return [username, email, pwd]
 
-[register_user() for _ in range(120)]
+def login_user():
+     a_ = get_user_random()
+     user_name, pass_word = a_[0], a_[1]
+     login_env = Session()
+     a_ = login_env.post(f"{base_url}/login", json={
+          "username":user_name,
+          "password":pass_word
+     })
+     if a_.status_code == 200:
+          print("Login in")
+          with open("cookie.json", "w") as f:
+               dump(login_env.cookies.get_dict(), f)
+     else:
+          print("Login Failed")
+
+def create_tweet():
+     if not path.isfile("./cookie.json"):
+          login_user()
+          with open("./cookie.json", "r") as f:
+               cookies = load(f)
+               session = Session()
+               session.cookies.update(cookies)
+               create_twt = f"{base_url}/create_tweet"
+               text_ = "\n".join(get_data_.paragraph() for _ in range(4))
+               response = session.post(create_twt, json={
+                    "tweet":text_
+               })
+               if response.status_code == 200:
+                    print("Tweet Created:", response.json())
+               else:
+                    print("Not Logged in or session expired:", response.status_code, response.text)
+     else:
+          with open("./cookie.json", "r") as f:
+               cookies = load(f)
+               session = Session()
+               session.cookies.update(cookies)
+               create_twt = f"{base_url}/create_tweet"
+               text_ = "\n".join(get_data_.paragraph() for _ in range(4))
+               response = session.post(create_twt, json={
+                    "tweet":text_
+               })
+               if response.status_code == 201:
+                    print("Tweet Created:", response.json())
+               else:
+                    print("Not Logged in or session expired:", response.status_code, response.text)
+     # print(text_)
+
+# login_user()
+create_tweet()
+# create_tweet()
+# [register_user() for _ in range(120)]

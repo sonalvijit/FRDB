@@ -3,8 +3,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import Column, Integer, String
 from os import path
+from random import choice
 
 Base = declarative_base()
+DATABASE_URI = "sqlite:///user_info.db"
+engine = create_engine(DATABASE_URI, echo=False)
+Session = sessionmaker(bind=engine)
 
 class User(Base):
      __tablename__ = "users"
@@ -12,11 +16,6 @@ class User(Base):
      username = Column(String, unique=True, nullable=False)
      email = Column(String, unique=True, nullable=False)
      password = Column(String, nullable=False)
-
-DATABASE_URI = "sqlite:///user_info.db"
-engine = create_engine(DATABASE_URI, echo=False)
-
-Session = sessionmaker(bind=engine)
 
 def initialize_db():
      if path.isdir("user_info.db"):
@@ -44,3 +43,15 @@ def add_user_info(username, email, password):
      session.commit()
      print(f"User: {username} added!")
      session.close()
+
+def get_user_random():
+     session = Session()
+     users = session.query(User).all()
+     if not users:
+          print("No users found in the database")
+          session.close()
+          return
+     
+     random_user = choice(users)
+     session.close()
+     return [random_user.username, random_user.password]

@@ -3,3 +3,4 @@
 instance/frdb.db
 __pycache__
 .vscode
+cookie.json

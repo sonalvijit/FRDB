@@ -5,6 +5,9 @@ from flask_login import login_user
 def handle_index():
      return jsonify(msg="Welcome to API"), 200
 
+def handle_restricted_area():
+     return jsonify(message="If you are seeing this that means you have cookie man"), 200
+
 def handle_register(User, db, data):
      username = data.get("username")
      email = data.get("email")
