@@ -6,6 +6,7 @@ from password_generator import get_pwd
 from user_info_db import initialize_db, add_user_info, get_user_random
 from json import dump, load
 from os import path, remove
+import random
 
 load_dotenv()
 ptr_ = getenv("PORT")
@@ -14,6 +15,11 @@ base_url:str = f"http://localhost:{ptr_}"
 initialize_db()
 
 get_data_ = Faker()
+
+def get_random_integer(upper_limit):
+     if upper_limit <= 0:
+          raise ValueError("Upper limit must be greater than 0")
+     return random.randint(0, upper_limit - 1)
 
 def register_user(i):
      username = get_data_.user_name()
@@ -107,6 +113,10 @@ def like_tweet_():
                     print("Not Logged in or session expired:", response.status_code, response.text)
           remove("./cookie.json")
 
+a = get(f"{base_url}/api/tweet_count")
+if a.status_code == 200:
+     tweet_count = a.json().get("tweet_count")
+
 def create_comment_():
      if not path.isfile("./cookie.json"):
           login_user()
@@ -114,13 +124,13 @@ def create_comment_():
                cookies = load(f)
                session = Session()
                session.cookies.update(cookies)
-               create_twt = f"{base_url}/create_comment"
+               create_twt = f"{base_url}/create_comment/{get_random_integer(tweet_count)}"
                comment_ = "\n".join(get_data_.paragraph() for _ in range(4))
                response = session.post(create_twt, json={
                     "comment":comment_
                })
                if response.status_code == 201:
-                    print("Tweet Created:", response.json())
+                    print("Comment Created:", response.json())
                else:
                     print("Not Logged in or session expired:", response.status_code, response.text)
           remove("./cookie.json")
@@ -129,13 +139,13 @@ def create_comment_():
                cookies = load(f)
                session = Session()
                session.cookies.update(cookies)
-               create_twt = f"{base_url}/create_comment"
+               create_twt = f"{base_url}/create_comment/{get_random_integer(tweet_count)}"
                comment_ = "\n".join(get_data_.paragraph() for _ in range(4))
                response = session.post(create_twt, json={
                     "comment":comment_
                })
                if response.status_code == 201:
-                    print("Tweet Created:", response.json())
+                    print("Comment Created:", response.json())
                else:
                     print("Not Logged in or session expired:", response.status_code, response.text)
           remove("./cookie.json")
@@ -143,6 +153,7 @@ def create_comment_():
 def generator_user_():
      [register_user(i) for i in range(203)]
 
-generator_user_()
-[create_tweet() for _ in range(45)]
-[like_tweet_() for _ in range(45)]
+# generator_user_()
+# [create_tweet() for _ in range(45)]
+# [like_tweet_() for _ in range(45)]
+[create_comment_() for _ in range(45)] 
