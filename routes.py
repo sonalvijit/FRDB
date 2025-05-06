@@ -90,3 +90,8 @@ def get_followers():
 def get_following():
      username = request.args.get("username")
      return handle_view_followings(User=User, username=username)
+
+@routes_bp.route("/api/tweet_count")
+def get_tweet_count():
+     tweet_count = Tweet.query.count()
+     return jsonify({"tweet_count": tweet_count}), 200
