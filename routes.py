@@ -47,7 +47,6 @@ def create_tweet():
 @login_required
 def like_tweet():
      tweet_id_ = request.json.get("tweet_id")
-     # tweet_id_ = request.args.get("tweet_id")
      return handle_like_tweet(LikeTweet=LikeTweet, tweet_id=tweet_id_, current_user=current_user.id ,db=db)
 
 @routes_bp.route("/tweet",methods=["GET"])
@@ -61,10 +60,10 @@ def create_comment(tweet_id):
      data = request.json
      return handle_create_comment(Comment=Comment, user_id=current_user.id, tweet_id=tweet_id, data=data, db=db)
 
-@routes_bp.route("/like",methods=["POST"])
+@routes_bp.route("/like_comment",methods=["POST"])
 @login_required
 def like_comment():
-     comment_id = int(request.args.get("comment_id"))
+     comment_id = request.json.get("comment_id")
      return handle_like_comment(LikeComment=LikeComment, comment_id=comment_id, current_user=current_user.id, db=db)
 
 @routes_bp.route("/follow", methods=["POST"])
@@ -95,3 +94,8 @@ def get_following():
 def get_tweet_count():
      tweet_count = Tweet.query.count()
      return jsonify({"tweet_count": tweet_count}), 200
+
+@routes_bp.route("/api/comment_count")
+def get_comment_count():
+     comment_count = Comment.query.count()
+     return jsonify({"comment_count": comment_count}), 200

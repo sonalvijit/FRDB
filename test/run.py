@@ -43,7 +43,6 @@ def login_user():
           "password":pass_word
      })
      if a_.status_code == 200:
-          print("Login in")
           with open("cookie.json", "w") as f:
                dump(login_env.cookies.get_dict(), f)
      else:
@@ -91,7 +90,7 @@ def like_tweet_():
                session.cookies.update(cookies)
                create_twt = f"{base_url}/like"
                response = session.post(create_twt, json={
-                    "tweet_id":1
+                    "tweet_id":get_random_integer(tweet_count)
                })
                if response.status_code == 201:
                     print("Tweet Created:", response.json())
@@ -105,7 +104,7 @@ def like_tweet_():
                session.cookies.update(cookies)
                create_twt = f"{base_url}/like"
                response = session.post(create_twt, json={
-                    "tweet_id":3
+                    "tweet_id":get_random_integer(tweet_count)
                })
                if response.status_code == 201:
                     print("Tweet Created:", response.json())
@@ -113,9 +112,36 @@ def like_tweet_():
                     print("Not Logged in or session expired:", response.status_code, response.text)
           remove("./cookie.json")
 
-a = get(f"{base_url}/api/tweet_count")
-if a.status_code == 200:
-     tweet_count = a.json().get("tweet_count")
+def like_comment_():
+     if not path.isfile("./cookie.json"):
+          login_user()
+          with open("./cookie.json", "r") as f:
+               cookies = load(f)
+               session = Session()
+               session.cookies.update(cookies)
+               create_twt = f"{base_url}/like_comment"
+               response = session.post(create_twt, json={
+                    "comment_id":get_random_integer(comment_count)
+               })
+               if response.status_code == 201:
+                    print("Liked Comment:", response.json())
+               else:
+                    print("Not Logged in or session expired:", response.status_code, response.text)
+          remove("./cookie.json")
+     else:
+          with open("./cookie.json", "r") as f:
+               cookies = load(f)
+               session = Session()
+               session.cookies.update(cookies)
+               create_twt = f"{base_url}/like_comment"
+               response = session.post(create_twt, json={
+                    "comment_id":get_random_integer(comment_count)
+               })
+               if response.status_code == 201:
+                    print("Liked Comment:", response.json())
+               else:
+                    print("Not Logged in or session expired:", response.status_code, response.text)
+          remove("./cookie.json")
 
 def create_comment_():
      if not path.isfile("./cookie.json"):
@@ -151,9 +177,20 @@ def create_comment_():
           remove("./cookie.json")
 
 def generator_user_():
-     [register_user(i) for i in range(203)]
+     [register_user(i) for i in range(50)]
+
+a = get(f"{base_url}/api/tweet_count")
+if a.status_code == 200:
+     tweet_count = a.json().get("tweet_count")
+     print("Tweet Count:", tweet_count)
+
+b = get(f"{base_url}/api/comment_count")
+if b.status_code == 200:
+     comment_count = b.json().get("comment_count")
+     print("Comment Count:", comment_count)
 
 # generator_user_()
 # [create_tweet() for _ in range(45)]
 # [like_tweet_() for _ in range(45)]
-[create_comment_() for _ in range(45)] 
+# [create_comment_() for _ in range(45)]
+[like_comment_() for _ in range(45)]
