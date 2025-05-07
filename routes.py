@@ -50,7 +50,7 @@ def like_tweet():
      return handle_like_tweet(LikeTweet=LikeTweet, tweet_id=tweet_id_, current_user=current_user.id ,db=db)
 
 @routes_bp.route("/tweet",methods=["GET"])
-@login_required
+# @login_required
 def view_tweet():
      return handle_fetch_tweet(Tweet=Tweet, LikeTweet=LikeTweet)
 
@@ -69,25 +69,25 @@ def like_comment():
 @routes_bp.route("/follow", methods=["POST"])
 @login_required
 def follow_user():
-     username = request.args.get("username")
+     username = request.json.get("username")
      return handle_follow_user(username=username, User=User, current_user=current_user.id, Followers=Followers, db=db)
 
 @routes_bp.route("/unfollow", methods=["POST"])
 @login_required
 def unfollow_user():
-     username = request.args.get("username")
+     username = request.json.get("username")
      return handle_unfollow_user(username=username, User=User, current_user=current_user.id, Followers=Followers, db=db)
 
 @routes_bp.route("/followers",methods=["POST"])
 @login_required
 def get_followers():
-     username = request.args.get("username")
+     username = request.json.get("username")
      return handle_view_followers(User=User, username=username)
 
 @routes_bp.route("/following", methods=["GET"])
 @login_required
 def get_following():
-     username = request.args.get("username")
+     username = request.json.get("username")
      return handle_view_followings(User=User, username=username)
 
 @routes_bp.route("/api/tweet_count")

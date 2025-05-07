@@ -176,8 +176,39 @@ def create_comment_():
                     print("Not Logged in or session expired:", response.status_code, response.text)
           remove("./cookie.json")
 
+def follower_user():
+     if not path.isfile("./cookie.json"):
+          login_user()
+          with open("./cookie.json", "r") as f:
+               cookies = load(f)
+               session = Session()
+               session.cookies.update(cookies)
+               create_twt = f"{base_url}/follow"
+               response = session.post(create_twt, json={
+                    "username":get_user_random()[0]
+               })
+               if response.status_code == 201:
+                    print("Comment Created:", response.json())
+               else:
+                    print("Not Logged in or session expired:", response.status_code, response.text)
+          remove("./cookie.json")
+     else:
+          with open("./cookie.json", "r") as f:
+               cookies = load(f)
+               session = Session()
+               session.cookies.update(cookies)
+               create_twt = f"{base_url}/follow"
+               response = session.post(create_twt, json={
+                    "username":get_user_random()[0]
+               })
+               if response.status_code == 201:
+                    print("Comment Created:", response.json())
+               else:
+                    print("Not Logged in or session expired:", response.status_code, response.text)
+          remove("./cookie.json")
+
 def generator_user_():
-     [register_user(i) for i in range(50)]
+     [register_user(i) for i in range(300)]
 
 a = get(f"{base_url}/api/tweet_count")
 if a.status_code == 200:
@@ -193,4 +224,5 @@ if b.status_code == 200:
 # [create_tweet() for _ in range(45)]
 # [like_tweet_() for _ in range(45)]
 # [create_comment_() for _ in range(45)]
-[like_comment_() for _ in range(45)]
+# [like_comment_() for _ in range(45)]
+[follower_user() for _ in range(100)]
