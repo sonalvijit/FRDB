@@ -156,3 +156,21 @@ def handle_view_followings(User, username):
      ]
 
      return jsonify({"followings":followings,"count":len(followings)}), 200
+
+def handle_get_deepdown_database(User, Tweet, LikeTweet, Comment, LikeComment, Followers):
+     users = User.query.all()
+     tweets = Tweet.query.all()
+     likes = LikeTweet.query.all()
+     comments = Comment.query.all()
+     like_comments = LikeComment.query.all()
+     followers = Followers.query.all()
+
+     return jsonify({
+          "users":[{"id":u.id,"username":u.username,"email":u.email} for u in users],
+          "tweets":[{"id":t.id,"tweet":t.tweet,"user_id":t.user_id} for t in tweets],
+          "likes":[{"id":l.id,"user_id":l.user_id,"tweet_id":l.tweet_id} for l in likes],
+          "comments":[{"id":c.id,"comment":c.comment,"user_id":c.user_id,"tweet_id":c.tweet_id} for c in comments],
+          "like_comments":[{"id":lc.id,"user_id":lc.user_id,"comment_id":lc.comment_id} for lc in like_comments],
+          "followers":[{"follower_id":f.follower_id,"followed_id":f.followed_id} for f in followers]
+     }), 200
+

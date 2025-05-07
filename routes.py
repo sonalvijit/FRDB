@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from models import User, db, Tweet, LikeTweet, Comment, LikeComment, Followers
-from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index, handle_restricted_area
+from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index, handle_restricted_area, handle_get_deepdown_database
 
 routes_bp = Blueprint("routes_bp", __name__)
 login_manager = LoginManager()
@@ -110,3 +110,7 @@ def get_followers_additional_routes(username):
 @routes_bp.route("/following/<username>", methods=["GET"])
 def get_following_additional_routes(username):
      return handle_view_followings(User=User, username=username)
+
+@routes_bp.route("/database", methods=["GET"])
+def get_database():
+     return handle_get_deepdown_database(User=User, Tweet=Tweet, LikeTweet=LikeTweet, Comment=Comment, LikeComment=LikeComment, Followers=Followers)
