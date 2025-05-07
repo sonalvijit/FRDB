@@ -99,3 +99,14 @@ def get_tweet_count():
 def get_comment_count():
      comment_count = Comment.query.count()
      return jsonify({"comment_count": comment_count}), 200
+
+
+# ++++++++++++++++++++ ADDITIONAL ROUTES ++++++++++++++++++++
+
+@routes_bp.route("/followers/<username>",methods=["GET"])
+def get_followers_additional_routes(username):
+     return handle_view_followers(User=User, username=username)
+
+@routes_bp.route("/following/<username>", methods=["GET"])
+def get_following_additional_routes(username):
+     return handle_view_followings(User=User, username=username)
