@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
-from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_login import LoginManager, login_required, current_user
 from sqlalchemy import func, desc
 from models import User, db, Tweet, LikeTweet, Comment, LikeComment, Followers
-from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index, handle_restricted_area, handle_get_deepdown_database, handle_fetch_tweet_by_id, handle_fetch_user_by_id, handle_trending_users, handle_view_profile
+from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index, handle_restricted_area, handle_get_deepdown_database, handle_fetch_tweet_by_id, handle_fetch_user_by_id, handle_trending_users
 
 routes_bp = Blueprint("routes_bp", __name__)
 login_manager = LoginManager()
