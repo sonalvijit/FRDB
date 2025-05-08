@@ -204,3 +204,9 @@ def handle_fetch_user_by_id(User, user_id):
           "followers_count": len(followers),
           "followers": followers
      }), 200
+
+def handle_trending_users(User, Tweet, LikeTweet, Comment, LikeComment, Followers):
+     users = User.query.all()
+     trending_users = sorted(users, key=lambda u: (Tweet.query.filter_by(user_id=u.id).count() + LikeTweet.query.filter_by(user_id=u.id).count() + Comment.query.filter_by(user_id=u.id).count() + LikeComment.query.filter_by(user_id=u.id).count()), reverse=True)[:10]
+
+     return jsonify([{"id":u.id,"username":u.username} for u in trending_users]), 200
