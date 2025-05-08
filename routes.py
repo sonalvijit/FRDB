@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from models import User, db, Tweet, LikeTweet, Comment, LikeComment, Followers
-from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index, handle_restricted_area, handle_get_deepdown_database, handle_fetch_tweet_by_id, handle_fetch_user_by_id, handle_trending_users
+from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index, handle_restricted_area, handle_get_deepdown_database, handle_fetch_tweet_by_id, handle_fetch_user_by_id, handle_trending_users, handle_view_profile
 
 routes_bp = Blueprint("routes_bp", __name__)
 login_manager = LoginManager()
@@ -114,6 +114,10 @@ def get_following_additional_routes(username):
 @routes_bp.route("/tweet/<tweet_id>",methods=["GET"])
 def get_tweet_by_id(tweet_id):
      return handle_fetch_tweet_by_id(Tweet=Tweet, LikeTweet=LikeTweet, tweet_id=tweet_id)
+
+@routes_bp.route("/<username>",methods=["GET"])
+def get_user_by_username(username):
+     return handle_view_profile(User=User, username=username)
 
 @routes_bp.route("/user/<user_id>",methods=["GET"])
 def get_user_by_id(user_id):

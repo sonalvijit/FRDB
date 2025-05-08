@@ -210,3 +210,22 @@ def handle_trending_users(User, Tweet, LikeTweet, Comment, LikeComment, Follower
      trending_users = sorted(users, key=lambda u: (Tweet.query.filter_by(user_id=u.id).count() + LikeTweet.query.filter_by(user_id=u.id).count() + Comment.query.filter_by(user_id=u.id).count() + LikeComment.query.filter_by(user_id=u.id).count()), reverse=True)[:10]
 
      return jsonify([{"id":u.id,"username":u.username} for u in trending_users]), 200
+
+def handle_view_profile(User, username):
+     user = User.query.filter_by(username=username).first()
+     if not user:
+          return jsonify({"error": "User not found"}), 404
+     
+     followers = [{"id": f.follower.id, "username": f.follower.username} for f in user.followers]
+     followings = [{"id": f.followed.id, "username": f.followed.username} for f in user.following]
+     tweets = [{"id": t.id, "tweet": t.tweet, "created_at": t.date_created} for t in user.tweets]
+
+     return jsonify({
+          "user_id": user.id,
+          "username": user.username,
+          "followers_count": len(followers),
+          "followings_count": len(followings),
+          "followers": followers,
+          "followings": followings,
+          "tweets": tweets
+     }), 200
