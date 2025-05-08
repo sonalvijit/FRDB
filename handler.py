@@ -191,3 +191,16 @@ def handle_get_deepdown_database(User, Tweet, LikeTweet, Comment, LikeComment, F
           "followers":[{"follower_id":f.follower_id,"followed_id":f.followed_id} for f in followers]
      }), 200
 
+def handle_fetch_user_by_id(User, user_id):
+     user = User.query.filter_by(id=user_id).first()
+     if not user:
+          return jsonify({"error": "User not found!"}), 404
+     
+     followers = [{"id": f.follower.id, "username": f.follower.username} for f in user.followers]
+     
+     return jsonify({
+          "id": user.id,
+          "username": user.username,
+          "followers_count": len(followers),
+          "followers": followers
+     }), 200
