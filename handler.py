@@ -70,6 +70,23 @@ def handle_fetch_tweet(Tweet, LikeTweet):
           return jsonify([{"tweet_id":t.id,"tweet":t.tweet,"created_by":t.author.username,"created_at":t.date_created,"likes":LikeTweet.query.filter_by(tweet_id=t.id).count(),"comments":[{"comment_id":c.id,"comment":c.comment,"date_created":c.date_created} for c in t.comments]} for t in tweets]), 200
      return jsonify({"error":"No tweets in database!"}), 400
 
+def handle_fetch_tweet_by_id(Tweet, LikeTweet, tweet_id):
+     tweet = Tweet.query.filter_by(id=tweet_id).first()
+     if not tweet:
+          return jsonify({"error":"Tweet not found!"}), 404
+     
+     comments = [{"comment_id":c.id,"comment":c.comment,"date_created":c.date_created} for c in tweet.comments]
+     likes = LikeTweet.query.filter_by(tweet_id=tweet.id).count()
+
+     return jsonify({
+          "tweet_id":tweet.id,
+          "tweet":tweet.tweet,
+          "created_by":tweet.author.username,
+          "created_at":tweet.date_created,
+          "likes":likes,
+          "comments":comments
+     }), 200
+
 def handle_create_comment(Comment, user_id, tweet_id, data, db):
      comments = Comment(comment=data.get("comment"),user_id=user_id,tweet_id=tweet_id)
      db.session.add(comments)
