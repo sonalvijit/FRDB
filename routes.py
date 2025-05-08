@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from sqlalchemy import func, desc
 from models import User, db, Tweet, LikeTweet, Comment, LikeComment, Followers
 from handler import handle_register, handle_login, handle_create_tweet, handle_view_profile, handle_like_tweet, handle_fetch_tweet, handle_create_comment, handle_like_comment, handle_follow_user, handle_unfollow_user, handle_view_followers, handle_view_followings, handle_index, handle_restricted_area, handle_get_deepdown_database, handle_fetch_tweet_by_id, handle_fetch_user_by_id, handle_trending_users, handle_view_profile
 
@@ -125,8 +126,8 @@ def get_user_by_id(user_id):
 
 @routes_bp.route("/trending_users", methods=["GET"])
 def get_trending_users():
-     return handle_trending_users(User=User, Tweet=Tweet, LikeTweet=LikeTweet, Comment=Comment, LikeComment=LikeComment, Followers=Followers)
+     return handle_trending_users(db=db, func=func, desc=desc, User=User, Tweet=Tweet, LikeTweet=LikeTweet, Comment=Comment, LikeComment=LikeComment, Followers=Followers)
 
 @routes_bp.route("/database", methods=["GET"])
 def get_database():
-     return handle_get_deepdown_database(User=User, Tweet=Tweet, LikeTweet=LikeTweet, Comment=Comment, LikeComment=LikeComment, Followers=Followers)
+     return handle_get_deepdown_database(db=db, User=User, Tweet=Tweet, LikeTweet=LikeTweet, Comment=Comment, LikeComment=LikeComment, Followers=Followers)

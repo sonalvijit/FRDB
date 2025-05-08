@@ -205,11 +205,53 @@ def handle_fetch_user_by_id(User, user_id):
           "followers": followers
      }), 200
 
-def handle_trending_users(User, Tweet, LikeTweet, Comment, LikeComment, Followers):
-     users = User.query.all()
-     trending_users = sorted(users, key=lambda u: (Tweet.query.filter_by(user_id=u.id).count() + LikeTweet.query.filter_by(user_id=u.id).count() + Comment.query.filter_by(user_id=u.id).count() + LikeComment.query.filter_by(user_id=u.id).count()), reverse=True)[:10]
+def handle_trending_users(db, func, desc, User, Tweet, LikeTweet, Comment, LikeComment, Followers):
+    # Get follower count per user
+    follower_counts = db.session.query(
+        Followers.followed_id.label('user_id'),
+        func.count(Followers.follower_id).label('follower_count')
+    ).group_by(Followers.followed_id).subquery()
 
-     return jsonify([{"id":u.id,"username":u.username} for u in trending_users]), 200
+    # Get tweet like count per user
+    tweet_like_counts = db.session.query(
+        Tweet.user_id.label('user_id'),
+        func.count(LikeTweet.id).label('tweet_like_count')
+    ).join(LikeTweet, Tweet.id == LikeTweet.tweet_id).group_by(Tweet.user_id).subquery()
+
+    # Get comment like count per user
+    comment_like_counts = db.session.query(
+        Comment.user_id.label('user_id'),
+        func.count(LikeComment.id).label('comment_like_count')
+    ).join(LikeComment, Comment.id == LikeComment.comment_id).group_by(Comment.user_id).subquery()
+
+    # Combine everything and calculate a "trending score"
+    trending_users = db.session.query(
+        User.id,
+        User.username,
+        func.coalesce(follower_counts.c.follower_count, 0).label('followers'),
+        func.coalesce(tweet_like_counts.c.tweet_like_count, 0).label('tweet_likes'),
+        func.coalesce(comment_like_counts.c.comment_like_count, 0).label('comment_likes'),
+        (
+            func.coalesce(follower_counts.c.follower_count, 0) * 2 +
+            func.coalesce(tweet_like_counts.c.tweet_like_count, 0) * 1.5 +
+            func.coalesce(comment_like_counts.c.comment_like_count, 0)
+        ).label('trending_score')
+    ).outerjoin(follower_counts, User.id == follower_counts.c.user_id
+    ).outerjoin(tweet_like_counts, User.id == tweet_like_counts.c.user_id
+    ).outerjoin(comment_like_counts, User.id == comment_like_counts.c.user_id
+    ).order_by(desc('trending_score')).limit(10).all()
+
+    # Format the result
+    result = [{
+        "user_id": u.id,
+        "username": u.username,
+        "followers": int(u.followers),
+        "tweet_likes": int(u.tweet_likes),
+        "comment_likes": int(u.comment_likes),
+        "trending_score": float(u.trending_score)
+    } for u in trending_users]
+
+    return jsonify(result)
 
 def handle_view_profile(User, username):
      user = User.query.filter_by(username=username).first()
