@@ -88,9 +88,9 @@ All API endpoints require an **Authorization** header with a valid Bearer token.
           }
           ```
 
-### 4. **GET /create_tweet**
+### 4. **POST /create_tweet**
 - **Description**: Get User info via username
-- **Method**: `GET`
+- **Method**: `POST`
 - **Authentication**: Required (Session token will be allocated)
 - **Parameters**:
      - `tweet`
@@ -110,5 +110,34 @@ All API endpoints require an **Authorization** header with a valid Bearer token.
           ```json
           {
                "error":"Unable to tweet!"
+          }
+          ```
+
+### 4. **POST /like**
+- **Description**: Get User info via username
+- **Method**: `POST`
+- **Authentication**: Required (Session token will be allocated)
+- **Parameters**:
+     - `tweet`
+          ```json
+          {
+               "tweet_id":"<tweet_id:Integer>"
+          }
+          ```
+- **Response**:
+     - `201 OK`
+          ```json
+          {
+               "data":[
+                    {
+                         "liked_tweet":"tweet_id",
+                         "status_code":201
+                    }]
+          }
+          ```
+     - `400 Error`
+          ```json
+          {
+               "error":"Unable to like tweet!"
           }
           ```
