@@ -113,7 +113,7 @@ All API endpoints require an **Authorization** header with a valid Bearer token.
           }
           ```
 
-### 4. **POST /like**
+### 5. **POST /like**
 - **Description**: Get User info via username
 - **Method**: `POST`
 - **Authentication**: Required (Session token will be allocated)
