@@ -221,8 +221,8 @@ if b.status_code == 200:
      print("Comment Count:", comment_count)
 
 # generator_user_()
-# [create_tweet() for _ in range(45)]
-# [like_tweet_() for _ in range(45)]
-# [create_comment_() for _ in range(45)]
-# [like_comment_() for _ in range(45)]
-[follower_user() for _ in range(100)]
+# [create_tweet() for _ in range(12)]
+# [like_tweet_() for _ in range(300)]
+# [create_comment_() for _ in range(12)]
+# [like_comment_() for _ in range(300)]
+[follower_user() for _ in range(450)]

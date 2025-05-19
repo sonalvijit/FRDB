@@ -271,3 +271,17 @@ def handle_view_profile(User, username):
           "followings": followings,
           "tweets": tweets
      }), 200
+
+def handle_followers_count(User, username, Followers):
+     if not username:
+          return jsonify({"error":"Username required!"}), 400
+     
+     user = User.query.filter_by(username=username).first()
+     if not user:
+          return jsonify({"error":"User not found"}), 404
+     
+     followers_count = Followers.query.filter_by(followed_id=user.id).count()
+
+     return jsonify({
+          "followers_count":followers_count
+     }), 200
