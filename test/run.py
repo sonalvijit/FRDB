@@ -220,9 +220,10 @@ if b.status_code == 200:
      comment_count = b.json().get("comment_count")
      print("Comment Count:", comment_count)
 
-# generator_user_()
-# [create_tweet() for _ in range(12)]
-# [like_tweet_() for _ in range(300)]
-# [create_comment_() for _ in range(12)]
-# [like_comment_() for _ in range(300)]
-[follower_user() for _ in range(450)]
+if __name__ == "__main__":
+     # generator_user_()
+     # [create_tweet() for _ in range(12)]
+     # [like_tweet_() for _ in range(300)]
+     # [create_comment_() for _ in range(12)]
+     # [like_comment_() for _ in range(300)]
+     [follower_user() for _ in range(1500)]

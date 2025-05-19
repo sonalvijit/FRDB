@@ -285,3 +285,20 @@ def handle_followers_count(User, username, Followers):
      return jsonify({
           "followers_count":followers_count
      }), 200
+
+def handle_get_most_followed_users(User, Followers, db, func, desc):
+     most_followed_users = db.session.query(
+          User.id,
+          User.username,
+          func.count(Followers.follower_id).label('followers_count')
+     ).join(Followers, User.id == Followers.followed_id
+     ).group_by(User.id
+     ).order_by(desc('followers_count')).limit(10).all()
+
+     result = [{
+          "user_id": u.id,
+          "username": u.username,
+          "followers_count": int(u.followers_count)
+     } for u in most_followed_users]
+
+     return jsonify(result)
