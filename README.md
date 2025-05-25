@@ -1,5 +1,9 @@
 # FRDB - Flask Relational Database Project
 
+## INTRO
+
+Simple API using python flask
+
 FRDB is a Flask-based web application that provides a platform for user registration, authentication, and social interactions such as creating tweets, liking tweets, commenting, and following other users. The project uses SQLAlchemy for database management and Flask-Login for user session handling.
 
 ## Features
